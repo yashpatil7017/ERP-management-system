@@ -36,4 +36,32 @@ const updateProduct = async (req, res) => {
     }
 };
 
-export { createProduct, deleteProduct, updateProduct};
+// Get Products with pagination and search
+const getProducts = async (req, res) => {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const search = req.query.search || "";
+
+      const query = {
+        name: { $regex: search, $options: "i" },      
+      };
+
+      const products = await Product.find(query)
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      const total = await Product.countDocuments(query);
+
+      res.status(200).json({
+        total,
+        page,
+        limit,
+        products,
+      });
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching products", error });
+    }
+};
+
+export { createProduct, deleteProduct, updateProduct, getProducts};
