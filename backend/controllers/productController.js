@@ -39,6 +39,7 @@ const updateProduct = async (req, res) => {
 // Get Products with pagination and search
 const getProducts = async (req, res) => {
     try {
+    
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
       const search = req.query.search || "";
