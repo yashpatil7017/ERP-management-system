@@ -29,7 +29,7 @@ const customerSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 //index for text search on name and email
-customerSchema.index({ name: "text", email: "text" });
+customerSchema.index({ name: "text", email: "text", city: "text" });
 
 const Customer = mongoose.model("Customer", customerSchema);
 
