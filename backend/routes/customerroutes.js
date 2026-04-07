@@ -1,7 +1,7 @@
 import express from 'express';
 import { addCustomer, updateCustomer, deleteCustomer, getCustomers} from '../controllers/customerController.js';
-import verifyToken from '../middleware/authmiddleware.js';
 import authorizeRoles from '../middleware/rolemiddleware.js';
+import verifyToken from '../middleware/authmiddleware.js';
 
 const router = express.Router();
 
