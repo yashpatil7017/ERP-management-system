@@ -107,7 +107,7 @@ const updateSalesOrder = async (req, res) => {
         session.endSession();
 
         res.status(200).json({ message: "Sales order updated successfully", salesOrder: updatedOrder });
-        
+
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
@@ -115,4 +115,73 @@ const updateSalesOrder = async (req, res) => {
     }
 };
 
-export { createSalesOrder, updateSalesOrder };
+// Get Sales Order
+
+const getSalesOrder = async (req, res) => {
+    try {
+
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const status = req.query.status;
+        const startDate = req.query.startDate;
+        const endDate = req.query.endDate;
+        const search = req.query.search;
+        const sortBy = req.query.sortBy || "createdAt";
+        const order = req.query.order === "desc" ? -1 : 1;
+
+        let query = {};
+
+        if (status) {
+            query.status = status;
+        }
+
+        if (startDate && endDate) {
+            query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+        }
+
+        //Search Logic
+        if (search) {
+            
+            //Search by Order ID
+
+            if (search.match(/^[0-9a-fA-F]{24}$/)) {
+                query._id = search;
+            }
+
+            //Search by Customer Name or Email
+            const customers = await Customer.find({
+                $or: [
+                    { name: { $regex: search, $options: "i" } },
+                    { email: { $regex: search, $options: "i" } },
+                ],
+            }).select("_id");
+
+            const customerIds = customers.map((customer) => customer._id);
+
+            if (customerIds.length > 0) {
+                query.customer = { $in: customerIds };
+            }
+        }
+
+        const salesOrders = await SalesOrder.find(query)
+            .populate("customer", "name city email")
+            .populate("items.product", "name price")
+            .sort({ [sortBy]: order })
+            .skip((page - 1) * limit)
+            .limit(limit);
+
+        const totalOrders = await SalesOrder.countDocuments(query);
+
+        res.status(200).json({
+            totalOrders,
+            page,
+            totalPages: Math.ceil(totalOrders / limit),
+            salesOrders,
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching sales order", error });
+    }
+};
+
+export { createSalesOrder, updateSalesOrder, getSalesOrder };
