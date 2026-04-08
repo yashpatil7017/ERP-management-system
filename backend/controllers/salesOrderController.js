@@ -184,4 +184,59 @@ const getSalesOrder = async (req, res) => {
     }
 };
 
-export { createSalesOrder, updateSalesOrder, getSalesOrder };
+// Order Status Update (e.g., shipped, delivered, cancelled) can be implemented similarly with appropriate stock adjustments and validations.
+
+const updateOrderStatus = async (req, res) => {
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const {status} = req.body;
+
+        const order = await SalesOrder.findById(req.params.id).session(session);
+
+        if (!order) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(404).json({ message: "Sales order not found" });
+        }
+
+        const allowedTransitions = {
+            pending: ["shipped", "cancelled"],
+            shipped: ["delivered", "cancelled"],
+            delivered: [],
+            cancelled: [],
+        };
+
+        if (!allowedTransitions[order.status].includes(status)) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({ message: `Invalid status transition from ${order.status} to ${status}` });
+        }
+
+        if (status === "cancelled") {
+            for (let item of order.items) {
+                await Product.findByIdAndUpdate(item.product, { $inc: { stock: item.quantity } }, { new: true, session });
+            }
+        }
+
+        // Order TimeLine Logic: We can also add a timeline entry here for status change if we have a timeline collection/model
+        // if (status === "shipped") order.shippedAt = new Date();
+        // if (status === "delivered") order.deliveredAt = new Date();
+        // if (status === "cancelled") order.cancelledAt = new Date();
+
+        order.status = status;
+
+        await order.save({ session });
+        await session.commitTransaction();
+        session.endSession();
+        res.status(200).json({ message: "Order status updated successfully", order });
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        console.error("Detailed Error :", error);
+        res.status(500).json({ message: "Error updating order status", error : error.message });
+    }
+};
+
+export { createSalesOrder, updateSalesOrder, getSalesOrder, updateOrderStatus };
