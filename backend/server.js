@@ -7,6 +7,7 @@ import userRoutes from './routes/userroutes.js';
 import productRoutes from './routes/productroutes.js';
 import customerRoutes from './routes/customerroutes.js';
 import supplierRoutes from './routes/supplierroutes.js';
+import salesOrderRoutes from './routes/salesorderroutes.js';
 
 dotenv.config();
 
@@ -14,12 +15,14 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 //Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/suppliers', supplierRoutes);
+app.use('/api/salesorders', salesOrderRoutes);
 
 //Server 
 const PORT = process.env.PORT || 5000;
