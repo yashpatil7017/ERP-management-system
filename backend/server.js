@@ -8,6 +8,7 @@ import productRoutes from './routes/productroutes.js';
 import customerRoutes from './routes/customerroutes.js';
 import supplierRoutes from './routes/supplierroutes.js';
 import salesOrderRoutes from './routes/salesorderroutes.js';
+import purchaseOrderRoutes from './routes/purchaseorderroutes.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/salesorders', salesOrderRoutes);
+app.use('/api/purchaseorders', purchaseOrderRoutes);
 
 //Server 
 const PORT = process.env.PORT || 5000;
