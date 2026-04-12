@@ -10,6 +10,7 @@ import supplierRoutes from './routes/supplierroutes.js';
 import salesOrderRoutes from './routes/salesorderroutes.js';
 import purchaseOrderRoutes from './routes/purchaseorderroutes.js';
 import grnRoutes from './routes/grnroutes.js';
+import invoiceRoutes from './routes/invoiceroutes.js';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/salesorders', salesOrderRoutes);
 app.use('/api/purchaseorders', purchaseOrderRoutes);
 app.use('/api/grn', grnRoutes);
+app.use('/api/invoices', invoiceRoutes);
 
 //Server 
 const PORT = process.env.PORT || 5000;
