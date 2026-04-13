@@ -11,6 +11,7 @@ import salesOrderRoutes from './routes/salesorderroutes.js';
 import purchaseOrderRoutes from './routes/purchaseorderroutes.js';
 import grnRoutes from './routes/grnroutes.js';
 import invoiceRoutes from './routes/invoiceroutes.js';
+import errorMiddleware from './middleware/errorMiddleware.js';
 
 dotenv.config();
 
@@ -18,6 +19,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+//Error Middleware
+app.use(errorMiddleware);
 
 //Routes
 app.use('/api/auth', authRoutes);
