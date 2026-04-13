@@ -178,4 +178,26 @@ res.status(500).json({ message: error.message });
 
 };
 
-export { createInvoice, getInvoices };
+//Get invoice by ID
+
+const getInvoiceById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const invoice = await Invoice.findById(id)
+            .populate("customer", "name email phone city")
+            .populate("salesOrder")
+            .populate("items.product", "name price");
+
+        if (!invoice) {
+            return res.status(404).json({ message: "Invoice not found" });
+        }
+
+        res.status(200).json(invoice);
+        console.log("Invoice retrieved successfully", invoice);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export { createInvoice, getInvoices, getInvoiceById };
