@@ -193,11 +193,127 @@ const getInvoiceById = async (req, res) => {
             return res.status(404).json({ message: "Invoice not found" });
         }
 
-        res.status(200).json(invoice);
+        res.status(200).json({ message: "Invoice retrieved successfully", invoice });
         console.log("Invoice retrieved successfully", invoice);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-export { createInvoice, getInvoices, getInvoiceById };
+//Update invoice status to Paid
+
+const updateInvoiceStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const invoice = await Invoice.findById(id);
+
+        if (!invoice) {
+            return res.status(404).json({ message: "Invoice not found" });
+        }
+
+        if (invoice.status === "Paid") {
+            return res.status(400).json({ message: "Invoice is already marked as Paid" });
+        }
+
+        invoice.status = "Paid";
+        invoice.paidAt = new Date();
+
+        const updatedInvoice = await invoice.save();
+
+        res.status(200).json({ message: "Invoice status updated successfully", invoice: updatedInvoice });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Revenue Analysis total revenue , monthly revenue , top customers
+
+const getRevenueReport = async (req, res) => {
+
+  try {
+
+    // 1️⃣ TOTAL REVENUE (Only Paid Invoices)
+    const totalRevenueResult = await Invoice.aggregate([
+      { $match: { status: "Paid" } },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$totalAmount" }
+        }
+      }
+    ]);
+
+    const totalRevenue = totalRevenueResult[0]?.totalRevenue || 0;
+
+    // 2️⃣ MONTHLY REVENUE
+    const monthlyRevenue = await Invoice.aggregate([
+      { $match: { status: "Paid" } },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$invoiceDate" },
+            month: { $month: "$invoiceDate" }
+          },
+          revenue: { $sum: "$totalAmount" }
+        }
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      }
+    ]);
+
+    // 3️⃣ TOP CUSTOMERS
+    const topCustomers = await Invoice.aggregate([
+      { $match: { status: "Paid" } },
+      {
+        $group: {
+          _id: "$customer",
+          revenue: { $sum: "$totalAmount" },
+          orders: { $sum: 1 }
+        }
+      },
+      { $sort: { revenue: -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: "customers",
+          localField: "_id",
+          foreignField: "_id",
+          as: "customer"
+        }
+      },
+      { $unwind: "$customer" },
+      {
+        $project: {
+          _id: 0,
+          customerId: "$customer._id",
+          name: "$customer.name",
+          email: "$customer.email",
+          revenue: 1,
+          orders: 1
+        }
+      }
+    ]);
+
+    // RESPONSE
+    res.json({
+      totalRevenue,
+      monthlyRevenue,
+      topCustomers
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+};
+
+export { createInvoice, getInvoices, getInvoiceById, updateInvoiceStatus, getRevenueReport };
