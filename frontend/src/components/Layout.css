@@ -51,11 +51,8 @@
   z-index: 25;
 }
 
+/* Desktop: still honor open/closed — do not force sidebar visible (that broke collapse). */
 @media (min-width: 1024px) {
-  .layout__sidebar {
-    transform: translateX(0);
-  }
-
   .layout__backdrop {
     display: none;
   }

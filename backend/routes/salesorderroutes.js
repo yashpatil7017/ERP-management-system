@@ -1,5 +1,6 @@
 import express from 'express';
 import { createSalesOrder, updateSalesOrder, getSalesOrder, updateOrderStatus} from '../controllers/salesOrderController.js';
+import { getRecentSalesOrders } from '../controllers/dashboardController.js';
 import verifyToken from '../middleware/authmiddleware.js';
 import authorizeRoles from '../middleware/rolemiddleware.js';
 
@@ -9,5 +10,7 @@ router.post('/createSalesOrder', verifyToken, authorizeRoles('admin'), createSal
 router.put('/updateSalesOrder/:id', verifyToken, authorizeRoles('admin'), updateSalesOrder);
 router.get('/getSalesOrder', verifyToken, authorizeRoles('admin'), getSalesOrder);
 router.put('/updateOrderStatus/:id', verifyToken, authorizeRoles('admin'), updateOrderStatus);
+
+router.get('/recent', verifyToken, getRecentSalesOrders);
 
 export default router;
