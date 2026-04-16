@@ -17,7 +17,9 @@ import GRNList from './pages/GRN/GRNList.jsx';
 import InvoiceList from './pages/Invoices/InvoiceList.jsx';
 import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
 
-function App() {
+function AppDebug() {
+  console.log('🚀 App component rendering');
+  
   return (
     <Router>
       <AuthProvider>
@@ -65,11 +67,11 @@ function App() {
 
           {/* ROOT AND FALLBACK */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </AuthProvider>
     </Router>
   );
 }
 
-export default App;
+export default AppDebug;
