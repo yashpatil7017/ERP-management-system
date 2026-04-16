@@ -1,11 +1,11 @@
 import express from "express";
 import { createGRN, getGRNs } from "../controllers/grnController.js";
-import authMiddleware from "../middleware/authMiddleware.js";
-import verifyToken from "../middleware/authMiddleware.js";
+import verifyToken from "../middleware/authmiddleware.js";
+import authorizeRoles from "../middleware/rolemiddleware.js";
 
 const router = express.Router();
 
-router.post("/createGRN", authMiddleware, verifyToken, createGRN);
-router.get("/getGRNs", authMiddleware, verifyToken, getGRNs);
+router.post("/createGRN", verifyToken, authorizeRoles("admin"), createGRN);
+router.get("/getGRNs", verifyToken, authorizeRoles("admin"), getGRNs);
 
 export default router;
