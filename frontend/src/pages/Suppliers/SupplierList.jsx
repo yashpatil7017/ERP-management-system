@@ -1,12 +1,12 @@
 import React from 'react';
 
-const SupplierList = () => {
+export default function SupplierList() {
   return (
-    <div className="supplier-list-page">
-      <h1>Suppliers</h1>
-      {/* Supplier list will be added here */}
+    <div style={{ padding: 16 }}>
+      <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>Suppliers</h1>
+      <p style={{ marginTop: 8, color: '#6b7280' }}>
+        Supplier module is loading. Add your supplier list/table here.
+      </p>
     </div>
   );
-};
-
-export default SupplierList;
+}

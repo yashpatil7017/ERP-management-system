@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './routes/ProtectedRoute';
+import Layout from './components/Layout';
 
 // Auth Pages
 import Login from './pages/Auth/Login.jsx';
@@ -16,6 +17,7 @@ import PurchaseOrderList from './pages/PurchaseOrders/PurchaseOrderList.jsx';
 import GRNList from './pages/GRN/GRNList.jsx';
 import InvoiceList from './pages/Invoices/InvoiceList.jsx';
 import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
+import Unauthorized from './pages/Unauthorized.jsx';
 
 function App() {
   return (
@@ -25,42 +27,38 @@ function App() {
           {/* PUBLIC ROUTES */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* PROTECTED ROUTES */}
+          {/* PROTECTED ROUTES WITH LAYOUT */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Route>
+            <Route element={<Layout />}>
+              {/* Dashboard - All authenticated users */}
+              <Route path="/dashboard" element={<Dashboard />} />
 
-          <Route element={<ProtectedRoute requiredRoles={['admin', 'sales']} />}>
-            <Route path="/products" element={<ProductList />} />
-          </Route>
+              {/* Products - Admin & Sales */}
+              <Route path="/products" element={<ProductList />} />
 
-          <Route element={<ProtectedRoute requiredRoles={['admin', 'sales']} />}>
-            <Route path="/customers" element={<CustomerList />} />
-          </Route>
+              {/* Customers - Admin & Sales */}
+              <Route path="/customers" element={<CustomerList />} />
 
-          <Route element={<ProtectedRoute requiredRoles={['admin', 'purchase']} />}>
-            <Route path="/suppliers" element={<SupplierList />} />
-          </Route>
+              {/* Suppliers - Admin & Purchase */}
+              <Route path="/suppliers" element={<SupplierList />} />
 
-          <Route element={<ProtectedRoute requiredRoles={['admin', 'sales']} />}>
-            <Route path="/sales-orders" element={<SalesOrderList />} />
-          </Route>
+              {/* Sales Orders - Admin & Sales */}
+              <Route path="/sales-orders" element={<SalesOrderList />} />
 
-          <Route element={<ProtectedRoute requiredRoles={['admin', 'purchase']} />}>
-            <Route path="/purchase-orders" element={<PurchaseOrderList />} />
-          </Route>
+              {/* Purchase Orders - Admin & Purchase */}
+              <Route path="/purchase-orders" element={<PurchaseOrderList />} />
 
-          <Route element={<ProtectedRoute requiredRoles={['admin', 'inventory']} />}>
-            <Route path="/grn" element={<GRNList />} />
-          </Route>
+              {/* GRN - Admin & Inventory */}
+              <Route path="/grn" element={<GRNList />} />
 
-          <Route element={<ProtectedRoute requiredRoles={['admin']} />}>
-            <Route path="/invoices" element={<InvoiceList />} />
-          </Route>
+              {/* Invoices - Admin only */}
+              <Route path="/invoices" element={<InvoiceList />} />
 
-          <Route element={<ProtectedRoute requiredRoles={['admin']} />}>
-            <Route path="/admin" element={<AdminDashboard />} />
+              {/* Admin - Admin only */}
+              <Route path="/admin" element={<AdminDashboard />} />
+            </Route>
           </Route>
 
           {/* ROOT AND FALLBACK */}
