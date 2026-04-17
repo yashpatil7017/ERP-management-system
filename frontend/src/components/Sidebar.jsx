@@ -4,21 +4,27 @@ import useAuth from '../context/useAuth';
 import './Sidebar.css';
 
 const navItems = [
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/products', label: 'Products' },
-  { to: '/customers', label: 'Customers' },
-  { to: '/suppliers', label: 'Suppliers' },
-  { to: '/sales-orders', label: 'Sales Orders' },
-  { to: '/purchase-orders', label: 'Purchase Orders' },
-  { to: '/grn', label: 'GRN' },
-  { to: '/invoices', label: 'Invoices' },
-  { to: '/admin', label: 'Admin' },
-  { to: '/admin/users', label: 'User Management' },
+  { to: '/dashboard', label: 'Dashboard', roles: ['admin', 'sales', 'purchase', 'inventory'] },
+  { to: '/products', label: 'Products', roles: ['admin', 'inventory'] },
+  { to: '/customers', label: 'Customers', roles: ['admin', 'sales'] },
+  { to: '/suppliers', label: 'Suppliers', roles: ['admin', 'purchase'] },
+  { to: '/sales-orders', label: 'Sales Orders', roles: ['admin', 'sales'] },
+  { to: '/purchase-orders', label: 'Purchase Orders', roles: ['admin', 'purchase'] },
+  { to: '/grn', label: 'GRN', roles: ['admin', 'inventory', 'purchase'] },
+  { to: '/invoices', label: 'Invoices', roles: ['admin', 'sales'] },
+  { to: '/admin', label: 'Admin', roles: ['admin'] },
+  { to: '/admin/users', label: 'User Management', roles: ['admin'] },
 ];
 
 export default function Sidebar({ isOpen = true, onNavigate }) {
   const navigate = useNavigate();
-  const { logout, currentUser } = useAuth();
+  const { logout, currentUser, role } = useAuth();
+  const normalizedRole = String(role || currentUser?.role || '').toLowerCase();
+
+  const visibleNavItems = navItems.filter((item) => {
+    if (normalizedRole === 'admin') return true;
+    return item.roles.includes(normalizedRole);
+  });
 
   const handleLogout = () => {
     logout();
@@ -40,7 +46,7 @@ export default function Sidebar({ isOpen = true, onNavigate }) {
       </div>
 
       <nav className="sidebar__nav" aria-label="Sidebar navigation">
-        {navItems.map((item) => (
+        {visibleNavItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}

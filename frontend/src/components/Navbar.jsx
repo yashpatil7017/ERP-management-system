@@ -5,9 +5,10 @@ import './Navbar.css';
 
 export default function Navbar({ onToggleSidebar }) {
   const navigate = useNavigate();
-  const { currentUser, logout } = useAuth();
+  const { currentUser, role, logout } = useAuth();
 
   const displayName = currentUser?.name || currentUser?.email || 'User';
+  const displayRole = role ? `${role.charAt(0).toUpperCase()}${role.slice(1)}` : 'User';
 
   const handleLogout = () => {
     logout();
@@ -32,6 +33,7 @@ export default function Navbar({ onToggleSidebar }) {
         <div className="navbar__user" title={displayName}>
           {displayName}
         </div>
+        <span className="navbar__roleBadge">{displayRole}</span>
         <button type="button" className="navbar__logout" onClick={handleLogout}>
           Logout
         </button>

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './routes/ProtectedRoute';
+import RoleProtectedRoute from './components/RoleProtectedRoute.jsx';
 import Layout from './components/Layout';
 
 // Auth Pages
@@ -46,36 +47,155 @@ function App() {
               {/* Dashboard - All authenticated users */}
               <Route path="/dashboard" element={<Dashboard />} />
 
-              {/* Products - Admin & Sales */}
-              <Route path="/products" element={<ProductList />} />
-              <Route path="/products/new" element={<AddProduct />} />
-              <Route path="/products/:id/edit" element={<EditProduct />} />
+              {/* Products - Admin & Inventory */}
+              <Route
+                path="/products"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'inventory']}>
+                    <ProductList />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/products/new"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'inventory']}>
+                    <AddProduct />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/products/:id/edit"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'inventory']}>
+                    <EditProduct />
+                  </RoleProtectedRoute>
+                )}
+              />
 
               {/* Customers - Admin & Sales */}
-              <Route path="/customers" element={<CustomerList />} />
-              <Route path="/customers/new" element={<AddCustomer />} />
-              <Route path="/customers/edit/:id" element={<EditCustomer />} />
+              <Route
+                path="/customers"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'sales']}>
+                    <CustomerList />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/customers/new"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'sales']}>
+                    <AddCustomer />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/customers/edit/:id"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'sales']}>
+                    <EditCustomer />
+                  </RoleProtectedRoute>
+                )}
+              />
 
               {/* Suppliers - Admin & Purchase */}
-              <Route path="/suppliers" element={<SupplierList />} />
-              <Route path="/suppliers/new" element={<AddSupplier />} />
-              <Route path="/suppliers/edit/:id" element={<EditSupplier />} />
+              <Route
+                path="/suppliers"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'purchase']}>
+                    <SupplierList />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/suppliers/new"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'purchase']}>
+                    <AddSupplier />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/suppliers/edit/:id"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'purchase']}>
+                    <EditSupplier />
+                  </RoleProtectedRoute>
+                )}
+              />
 
               {/* Sales Orders - Admin & Sales */}
-              <Route path="/sales-orders" element={<SalesOrderList />} />
-              <Route path="/sales-orders/create" element={<CreateSalesOrder />} />
+              <Route
+                path="/sales-orders"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'sales']}>
+                    <SalesOrderList />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/sales-orders/create"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'sales']}>
+                    <CreateSalesOrder />
+                  </RoleProtectedRoute>
+                )}
+              />
 
               {/* Purchase Orders - Admin & Purchase */}
-              <Route path="/purchase-orders" element={<PurchaseOrderList />} />
-              <Route path="/purchase-orders/new" element={<CreatePurchaseOrder />} />
+              <Route
+                path="/purchase-orders"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'purchase']}>
+                    <PurchaseOrderList />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/purchase-orders/new"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'purchase']}>
+                    <CreatePurchaseOrder />
+                  </RoleProtectedRoute>
+                )}
+              />
 
-              {/* GRN - Admin & Inventory */}
-              <Route path="/grn" element={<GRNList />} />
-              <Route path="/grn/create" element={<CreateGRN />} />
+              {/* GRN - Admin, Inventory, Purchase */}
+              <Route
+                path="/grn"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'inventory', 'purchase']}>
+                    <GRNList />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/grn/create"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'inventory', 'purchase']}>
+                    <CreateGRN />
+                  </RoleProtectedRoute>
+                )}
+              />
 
-              {/* Invoices - Admin only */}
-              <Route path="/invoices" element={<InvoiceList />} />
-              <Route path="/invoices/generate" element={<GenerateInvoice />} />
+              {/* Invoices - Admin & Sales */}
+              <Route
+                path="/invoices"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'sales']}>
+                    <InvoiceList />
+                  </RoleProtectedRoute>
+                )}
+              />
+              <Route
+                path="/invoices/generate"
+                element={(
+                  <RoleProtectedRoute allowedRoles={['admin', 'sales']}>
+                    <GenerateInvoice />
+                  </RoleProtectedRoute>
+                )}
+              />
 
               {/* Admin - Admin only */}
               <Route element={<ProtectedRoute requiredRoles={['admin']} />}>

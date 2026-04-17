@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { clearAuthStorage, getToken } from '../utils/tokenUtils';
 
 let unauthorizedHandler = null;
@@ -18,6 +19,13 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = getToken();
+    const isPublicAuthRoute = String(config?.url || '').includes('/api/auth/login')
+      || String(config?.url || '').includes('/api/auth/register');
+
+    if (!token && !isPublicAuthRoute) {
+      return Promise.reject(new axios.Cancel('No auth token found. Request blocked.'));
+    }
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -37,6 +45,8 @@ api.interceptors.response.use(
       } else {
         window.location.href = '/login';
       }
+    } else if (status === 403) {
+      toast.error('You are not authorized to perform this action.');
     }
     return Promise.reject(error);
   }

@@ -5,7 +5,7 @@ import authorizeRoles from "../middleware/rolemiddleware.js";
 
 const router = express.Router();
 
-router.post("/createGRN", verifyToken, authorizeRoles("admin"), createGRN);
-router.get("/getGRNs", verifyToken, authorizeRoles("admin"), getGRNs);
+router.post("/createGRN", verifyToken, authorizeRoles('admin','inventory','purchase'), createGRN);
+router.get("/getGRNs", verifyToken, getGRNs);
 
 export default router;

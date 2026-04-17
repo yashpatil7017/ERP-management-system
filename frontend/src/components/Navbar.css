@@ -60,6 +60,17 @@
   text-overflow: ellipsis;
 }
 
+.navbar__roleBadge {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .navbar__logout {
   border: 1px solid #e5e7eb;
   background: #ffffff;

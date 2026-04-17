@@ -5,9 +5,9 @@ import authorizeRoles from "../middleware/rolemiddleware.js";
 
 const router = express.Router();
 
-router.post("/addSupplier", verifyToken, authorizeRoles("admin"), addSupplier);
-router.put("/updateSupplier/:id", verifyToken, authorizeRoles("admin"), updateSupplier);
-router.delete("/deleteSupplier/:id", verifyToken, authorizeRoles("admin"), deleteSupplier);
-router.get("/getSuppliers", verifyToken, authorizeRoles("admin"), getSuppliers);
+router.post("/addSupplier", verifyToken, authorizeRoles("admin","purchase"), addSupplier);
+router.put("/updateSupplier/:id", verifyToken, authorizeRoles("admin","purchase"), updateSupplier);
+router.delete("/deleteSupplier/:id", verifyToken, authorizeRoles("admin","purchase"), deleteSupplier);
+router.get("/getSuppliers", verifyToken, getSuppliers);
 
 export default router;

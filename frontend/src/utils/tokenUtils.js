@@ -13,6 +13,12 @@ export function decodeToken(token) {
   }
 }
 
+export function getRoleFromToken(token) {
+  const decoded = decodeToken(token);
+  const rawRole = decoded?.role || decoded?.user?.role || decoded?.userRole;
+  return typeof rawRole === 'string' ? rawRole.toLowerCase() : '';
+}
+
 export function isTokenExpired(token) {
   const decoded = decodeToken(token);
   if (!decoded?.exp) return true;

@@ -6,10 +6,10 @@ import authorizeRoles from '../middleware/rolemiddleware.js';
 
 const router = express.Router();
 
-router.post('/createSalesOrder', verifyToken, authorizeRoles('admin'), createSalesOrder);
-router.put('/updateSalesOrder/:id', verifyToken, authorizeRoles('admin'), updateSalesOrder);
-router.get('/getSalesOrder', verifyToken, authorizeRoles('admin'), getSalesOrder);
-router.put('/updateOrderStatus/:id', verifyToken, authorizeRoles('admin'), updateOrderStatus);
+router.post('/createSalesOrder', verifyToken, authorizeRoles('admin','sales'), createSalesOrder);
+router.put('/updateSalesOrder/:id', verifyToken, authorizeRoles('admin','sales'), updateSalesOrder);
+router.get('/getSalesOrder', verifyToken, getSalesOrder);
+router.put('/updateOrderStatus/:id', verifyToken, authorizeRoles('admin','sales'), updateOrderStatus);
 
 router.get('/recent', verifyToken, getRecentSalesOrders);
 

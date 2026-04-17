@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axiosInstance from '../api/axios';
 import { setUnauthorizedHandler } from '../api/axiosInstance';
-import { clearAuthStorage, getToken, isTokenExpired } from '../utils/tokenUtils';
+import { clearAuthStorage, getRoleFromToken, getToken, isTokenExpired } from '../utils/tokenUtils';
 
 /**
  * ==========================================
@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }) => {
   const location = useLocation();
 
   const [currentUser, setCurrentUser] = useState(null);
+  const [role, setRole] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,6 +38,7 @@ export const AuthProvider = ({ children }) => {
   const forceLogout = useCallback((message = 'Session expired. Please login again.') => {
     clearAuthStorage();
     setCurrentUser(null);
+    setRole('');
     setIsAuthenticated(false);
     setError(null);
     toast.error(message);
@@ -66,13 +68,25 @@ export const AuthProvider = ({ children }) => {
           }
           // Token exists, restore user from localStorage
           const user = JSON.parse(userStr);
+          const tokenRole = getRoleFromToken(token);
           setCurrentUser(user);
+          setRole(tokenRole || String(user?.role || '').toLowerCase());
+          setIsAuthenticated(true);
+        } else if (token && !userStr) {
+          const tokenRole = getRoleFromToken(token);
+          if (!tokenRole) {
+            forceLogout('Session expired. Please login again.');
+            return;
+          }
+          setCurrentUser({ role: tokenRole });
+          setRole(tokenRole);
           setIsAuthenticated(true);
         }
       } catch {
         // Token is invalid or expired
         clearAuthStorage();
         setCurrentUser(null);
+        setRole('');
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -114,7 +128,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(user));
 
       // Update state
+      const tokenRole = getRoleFromToken(token);
       setCurrentUser(user);
+      setRole(tokenRole || String(user?.role || '').toLowerCase());
       setIsAuthenticated(true);
 
       return { success: true, user };
@@ -147,7 +163,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(user));
 
       // Update state
+      const tokenRole = getRoleFromToken(token);
       setCurrentUser(user);
+      setRole(tokenRole || String(user?.role || '').toLowerCase());
       setIsAuthenticated(true);
 
       return { success: true, user };
@@ -167,6 +185,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     clearAuthStorage();
     setCurrentUser(null);
+    setRole('');
     setIsAuthenticated(false);
     setError(null);
     navigate('/login', { replace: true });
@@ -195,13 +214,20 @@ export const AuthProvider = ({ children }) => {
    * @returns {boolean}
    */
   const hasRole = (roles) => {
-    if (!currentUser) return false;
+    if (!role) return false;
     const rolesArray = Array.isArray(roles) ? roles : [roles];
-    return rolesArray.includes(currentUser.role);
+    return rolesArray.map((item) => String(item).toLowerCase()).includes(role);
+  };
+
+  const canAccess = (allowedRoles = []) => {
+    if (!allowedRoles || allowedRoles.length === 0) return true;
+    if (role === 'admin') return true;
+    return hasRole(allowedRoles);
   };
 
   const value = {
     currentUser,
+    role,
     isAuthenticated,
     loading,
     error,
@@ -210,6 +236,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     updateProfile,
     hasRole,
+    canAccess,
   };
 
   return (

@@ -5,8 +5,8 @@ import verifyToken from '../middleware/authmiddleware.js';
 
 const router = express.Router();
 
-router.post('/addcustomer', verifyToken, authorizeRoles('admin'), addCustomer);
-router.put('/updatecustomer/:id', verifyToken, authorizeRoles('admin'), updateCustomer);
-router.delete('/deletecustomer/:id', verifyToken, authorizeRoles('admin'), deleteCustomer);
-router.get('/getcustomers', verifyToken, authorizeRoles('admin'), getCustomers);
+router.post('/addcustomer', verifyToken, authorizeRoles('admin','sales'), addCustomer);
+router.put('/updatecustomer/:id', verifyToken, authorizeRoles('admin','sales'), updateCustomer);
+router.delete('/deletecustomer/:id', verifyToken, authorizeRoles('admin','sales'), deleteCustomer);
+router.get('/getcustomers', verifyToken, getCustomers);
 export default router;
