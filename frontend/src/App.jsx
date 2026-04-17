@@ -19,6 +19,7 @@ import SupplierList from './pages/Suppliers/SupplierList.jsx';
 import AddSupplier from './pages/Suppliers/AddSupplier.jsx';
 import EditSupplier from './pages/Suppliers/EditSupplier.jsx';
 import SalesOrderList from './pages/SalesOrders/SalesOrderList.jsx';
+import CreateSalesOrder from './pages/SalesOrders/CreateSalesOrder.jsx';
 import CreatePurchaseOrder from './pages/PurchaseOrders/CreatePurchaseOrder.jsx';
 import PurchaseOrderList from './pages/PurchaseOrders/PurchaseOrderList.jsx';
 import CreateGRN from './pages/GRN/CreateGRN.jsx';
@@ -60,6 +61,7 @@ function App() {
 
               {/* Sales Orders - Admin & Sales */}
               <Route path="/sales-orders" element={<SalesOrderList />} />
+              <Route path="/sales-orders/create" element={<CreateSalesOrder />} />
 
               {/* Purchase Orders - Admin & Purchase */}
               <Route path="/purchase-orders" element={<PurchaseOrderList />} />
