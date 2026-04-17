@@ -21,6 +21,7 @@ import EditSupplier from './pages/Suppliers/EditSupplier.jsx';
 import SalesOrderList from './pages/SalesOrders/SalesOrderList.jsx';
 import CreatePurchaseOrder from './pages/PurchaseOrders/CreatePurchaseOrder.jsx';
 import PurchaseOrderList from './pages/PurchaseOrders/PurchaseOrderList.jsx';
+import CreateGRN from './pages/GRN/CreateGRN.jsx';
 import GRNList from './pages/GRN/GRNList.jsx';
 import InvoiceList from './pages/Invoices/InvoiceList.jsx';
 import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
@@ -66,6 +67,7 @@ function App() {
 
               {/* GRN - Admin & Inventory */}
               <Route path="/grn" element={<GRNList />} />
+              <Route path="/grn/create" element={<CreateGRN />} />
 
               {/* Invoices - Admin only */}
               <Route path="/invoices" element={<InvoiceList />} />
