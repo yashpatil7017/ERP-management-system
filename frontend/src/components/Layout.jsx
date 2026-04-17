@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import './Layout.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -27,6 +29,18 @@ export default function Layout() {
           <Outlet />
         </main>
       </div>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2500}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
 
       {sidebarOpen && (
         <button

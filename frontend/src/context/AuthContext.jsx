@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axios';
+import AuthContext from './authContext';
 
 /**
  * ==========================================
@@ -15,8 +16,6 @@ import axiosInstance from '../api/axios';
  * 
  * Used throughout the app via useAuth() hook
  */
-
-const AuthContext = createContext(null);
 
 /**
  * Auth Provider Component
@@ -44,7 +43,7 @@ export const AuthProvider = ({ children }) => {
           setCurrentUser(user);
           setIsAuthenticated(true);
         }
-      } catch (err) {
+      } catch {
         // Token is invalid or expired
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -185,20 +184,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-/**
- * useAuth Hook
- * Use this in any component to access auth state and methods
- * 
- * Example:
- * const { currentUser, isAuthenticated, login, logout } = useAuth();
- */
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
-};
-
-export default AuthContext;

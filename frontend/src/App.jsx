@@ -10,6 +10,8 @@ import Register from './pages/Auth/Register.jsx';
 // Protected Pages
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import ProductList from './pages/Products/ProductList.jsx';
+import AddProduct from './pages/Products/AddProduct.jsx';
+import EditProduct from './pages/Products/EditProduct.jsx';
 import CustomerList from './pages/Customers/CustomerList.jsx';
 import SupplierList from './pages/Suppliers/SupplierList.jsx';
 import SalesOrderList from './pages/SalesOrders/SalesOrderList.jsx';
@@ -37,6 +39,8 @@ function App() {
 
               {/* Products - Admin & Sales */}
               <Route path="/products" element={<ProductList />} />
+              <Route path="/products/new" element={<AddProduct />} />
+              <Route path="/products/:id/edit" element={<EditProduct />} />
 
               {/* Customers - Admin & Sales */}
               <Route path="/customers" element={<CustomerList />} />
