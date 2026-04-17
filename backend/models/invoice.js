@@ -5,51 +5,92 @@ const invoiceSchema = new mongoose.Schema(
     invoiceNumber: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        index: true,
     },
 
-    salesOrder: {
+    salesOrderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "SalesOrder",
-        required: true
+        required: true,
+        index: true,
     },
 
-    customer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Customer",
-        required: true
+    customerName: {
+        type: String,
+        required: true,
+        trim: true,
     },
 
-    items: [
+    customerEmail: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true,
+    },
+
+    customerPhone: {
+        type: String,
+        default: "",
+    },
+
+    billingAddress: {
+        type: String,
+        default: "",
+    },
+
+    products: [
         {
-            product: {
+            productId: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Product"
+                ref: "Product",
+                required: true,
             },
-
+            productName: {
+                type: String,
+                required: true,
+            },
             quantity: Number,
             price: Number
+            ,
+            total: Number,
         }
     ],
 
-    totalAmount: {
+    subtotal: {
         type: Number,
-        required: true
+        required: true,
+        min: 0,
+    },
+
+    tax: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
+
+    discount: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
+
+    total: {
+        type: Number,
+        required: true,
+        min: 0,
     },
 
     status: {
         type: String,
-        enum: ["Pending", "Paid"],
-        default: "Pending"
+        enum: ["paid", "unpaid", "pending"],
+        default: "unpaid",
+        lowercase: true,
     },
 
     invoiceDate: {
         type: Date,
-        default: Date.now
-    },
-
-    paidAt: {
-        type: Date,
+        default: Date.now,
     },
 
 },

@@ -24,8 +24,10 @@ import CreatePurchaseOrder from './pages/PurchaseOrders/CreatePurchaseOrder.jsx'
 import PurchaseOrderList from './pages/PurchaseOrders/PurchaseOrderList.jsx';
 import CreateGRN from './pages/GRN/CreateGRN.jsx';
 import GRNList from './pages/GRN/GRNList.jsx';
-import InvoiceList from './pages/Invoices/InvoiceList.jsx';
+import InvoiceList from './pages/InvoiceList.jsx';
+import GenerateInvoice from './pages/GenerateInvoice.jsx';
 import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
+import UserManagement from './pages/UserManagement.jsx';
 import Unauthorized from './pages/Unauthorized.jsx';
 
 function App() {
@@ -73,9 +75,13 @@ function App() {
 
               {/* Invoices - Admin only */}
               <Route path="/invoices" element={<InvoiceList />} />
+              <Route path="/invoices/generate" element={<GenerateInvoice />} />
 
               {/* Admin - Admin only */}
-              <Route path="/admin" element={<AdminDashboard />} />
+              <Route element={<ProtectedRoute requiredRoles={['admin']} />}>
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<UserManagement />} />
+              </Route>
             </Route>
           </Route>
 

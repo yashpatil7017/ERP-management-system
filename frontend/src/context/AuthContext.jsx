@@ -1,5 +1,9 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import axiosInstance from '../api/axios';
+import { setUnauthorizedHandler } from '../api/axiosInstance';
+import { clearAuthStorage, getToken, isTokenExpired } from '../utils/tokenUtils';
 
 /**
  * ==========================================
@@ -22,10 +26,28 @@ const AuthContext = createContext(null);
  * Wraps entire app to provide auth state
  */
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const forceLogout = useCallback((message = 'Session expired. Please login again.') => {
+    clearAuthStorage();
+    setCurrentUser(null);
+    setIsAuthenticated(false);
+    setError(null);
+    toast.error(message);
+    navigate('/login', { replace: true, state: { message } });
+  }, [navigate]);
+
+  useEffect(() => {
+    setUnauthorizedHandler((message) => {
+      forceLogout(message || 'Session expired. Please login again.');
+    });
+  }, [forceLogout]);
 
   /**
    * Check if user is already logged in on app load
@@ -34,10 +56,14 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = getToken();
         const userStr = localStorage.getItem('user');
         
         if (token && userStr) {
+          if (isTokenExpired(token)) {
+            forceLogout('Session expired. Please login again.');
+            return;
+          }
           // Token exists, restore user from localStorage
           const user = JSON.parse(userStr);
           setCurrentUser(user);
@@ -45,8 +71,7 @@ export const AuthProvider = ({ children }) => {
         }
       } catch {
         // Token is invalid or expired
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        clearAuthStorage();
         setCurrentUser(null);
         setIsAuthenticated(false);
       } finally {
@@ -55,7 +80,16 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuth();
-  }, []);
+  }, [forceLogout]);
+
+  useEffect(() => {
+    if (loading) return;
+    const token = getToken();
+    if (!token) return;
+    if (isTokenExpired(token)) {
+      forceLogout('Session expired. Please login again.');
+    }
+  }, [location.pathname, loading, forceLogout]);
 
   /**
    * Login function
@@ -131,11 +165,11 @@ export const AuthProvider = ({ children }) => {
    * Clears all auth state and localStorage
    */
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    clearAuthStorage();
     setCurrentUser(null);
     setIsAuthenticated(false);
     setError(null);
+    navigate('/login', { replace: true });
   };
 
   /**

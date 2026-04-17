@@ -13,6 +13,7 @@ const navItems = [
   { to: '/grn', label: 'GRN' },
   { to: '/invoices', label: 'Invoices' },
   { to: '/admin', label: 'Admin' },
+  { to: '/admin/users', label: 'User Management' },
 ];
 
 export default function Sidebar({ isOpen = true, onNavigate }) {

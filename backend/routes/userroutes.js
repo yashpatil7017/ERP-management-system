@@ -1,27 +1,14 @@
 import express from 'express';
 import verifyToken from '../middleware/authmiddleware.js';
 import authorizeRoles from '../middleware/rolemiddleware.js';
+import { getAllUsers, createUser, updateUser, updateUserStatus } from '../controllers/userController.js';
 
 const router = express.Router();
 
-//Admin access only
-router.get('/admin', verifyToken, authorizeRoles('admin'), (req, res) => {
-    res.json({ message: 'Welcome to the admin' });
-});
-
-//Sales access only
-router.get('/sales', verifyToken, authorizeRoles('admin','sales'), (req, res) => {
-    res.json({ message: 'Welcome to the sales' });
-});
-
-//Purchase access only
-router.get('/purchase', verifyToken, authorizeRoles('admin','purchase'), (req, res) => {
-    res.json({ message: 'Welcome to the purchase' });
-});
-
-//Inventory access only
-router.get('/inventory', verifyToken, authorizeRoles('admin', 'inventory'), (req, res) => {
-    res.json({ message: 'Welcome to the inventory' });
-});
+// Admin user management APIs
+router.get('/', verifyToken, authorizeRoles('admin'), getAllUsers);
+router.post('/', verifyToken, authorizeRoles('admin'), createUser);
+router.put('/:id', verifyToken, authorizeRoles('admin'), updateUser);
+router.patch('/:id/status', verifyToken, authorizeRoles('admin'), updateUserStatus);
 
 export default router;

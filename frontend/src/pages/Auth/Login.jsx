@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../context/useAuth';
 import '../Auth/Login.css';
 
@@ -17,6 +17,7 @@ import '../Auth/Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   // Form state
@@ -27,7 +28,7 @@ const Login = () => {
 
   // UI state
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(location.state?.message || '');
   const [showPassword, setShowPassword] = useState(false);
 
   /**

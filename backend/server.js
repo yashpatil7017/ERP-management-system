@@ -21,9 +21,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-//Error Middleware
-app.use(errorMiddleware);
-
 //Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -35,6 +32,9 @@ app.use('/api/purchaseorders', purchaseOrderRoutes);
 app.use('/api/grn', grnRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+
+// Error middleware must be registered after routes
+app.use(errorMiddleware);
 
 //Server 
 const PORT = process.env.PORT || 5000;

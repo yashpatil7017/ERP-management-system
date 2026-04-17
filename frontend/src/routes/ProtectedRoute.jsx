@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import useAuth from '../context/useAuth';
 import Loader from '../components/Loader';
+import { getToken, isTokenExpired } from '../utils/tokenUtils';
 
 /**
  * ==========================================
@@ -50,6 +51,11 @@ const ProtectedRoute = ({ requiredRoles = null }) => {
    */
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  const token = getToken();
+  if (!token || isTokenExpired(token)) {
+    return <Navigate to="/login" replace state={{ message: 'Session expired. Please login again.' }} />;
   }
 
   /**
