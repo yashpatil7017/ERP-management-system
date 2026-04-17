@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Layout from './components/Layout';
 
@@ -13,6 +13,8 @@ import ProductList from './pages/Products/ProductList.jsx';
 import AddProduct from './pages/Products/AddProduct.jsx';
 import EditProduct from './pages/Products/EditProduct.jsx';
 import CustomerList from './pages/Customers/CustomerList.jsx';
+import AddCustomer from './pages/Customers/AddCustomer.jsx';
+import EditCustomer from './pages/Customers/EditCustomer.jsx';
 import SupplierList from './pages/Suppliers/SupplierList.jsx';
 import SalesOrderList from './pages/SalesOrders/SalesOrderList.jsx';
 import PurchaseOrderList from './pages/PurchaseOrders/PurchaseOrderList.jsx';
@@ -44,6 +46,8 @@ function App() {
 
               {/* Customers - Admin & Sales */}
               <Route path="/customers" element={<CustomerList />} />
+              <Route path="/customers/new" element={<AddCustomer />} />
+              <Route path="/customers/edit/:id" element={<EditCustomer />} />
 
               {/* Suppliers - Admin & Purchase */}
               <Route path="/suppliers" element={<SupplierList />} />

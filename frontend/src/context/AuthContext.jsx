@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import axiosInstance from '../api/axios';
-import AuthContext from './authContext';
 
 /**
  * ==========================================
@@ -16,6 +15,7 @@ import AuthContext from './authContext';
  * 
  * Used throughout the app via useAuth() hook
  */
+const AuthContext = createContext(null);
 
 /**
  * Auth Provider Component
@@ -184,3 +184,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export default AuthContext;

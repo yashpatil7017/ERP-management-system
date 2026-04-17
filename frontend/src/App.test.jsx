@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext.jsx';
 
 // Test: Simple component
 const TestPage = () => <div className="p-10 text-center"><h1>Test Page Loading</h1></div>;
