@@ -12,7 +12,7 @@ const navItems = [
   { to: '/purchase-orders', label: 'Purchase Orders', roles: ['admin', 'purchase'] },
   { to: '/grn', label: 'GRN', roles: ['admin', 'inventory', 'purchase'] },
   { to: '/invoices', label: 'Invoices', roles: ['admin', 'sales'] },
-  { to: '/admin', label: 'Admin', roles: ['admin'] },
+ // { to: '/admin', label: 'Admin', roles: ['admin'] },
   { to: '/admin/users', label: 'User Management', roles: ['admin'] },
 ];
 
