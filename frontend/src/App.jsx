@@ -16,7 +16,10 @@ import CustomerList from './pages/Customers/CustomerList.jsx';
 import AddCustomer from './pages/Customers/AddCustomer.jsx';
 import EditCustomer from './pages/Customers/EditCustomer.jsx';
 import SupplierList from './pages/Suppliers/SupplierList.jsx';
+import AddSupplier from './pages/Suppliers/AddSupplier.jsx';
+import EditSupplier from './pages/Suppliers/EditSupplier.jsx';
 import SalesOrderList from './pages/SalesOrders/SalesOrderList.jsx';
+import CreatePurchaseOrder from './pages/PurchaseOrders/CreatePurchaseOrder.jsx';
 import PurchaseOrderList from './pages/PurchaseOrders/PurchaseOrderList.jsx';
 import GRNList from './pages/GRN/GRNList.jsx';
 import InvoiceList from './pages/Invoices/InvoiceList.jsx';
@@ -51,12 +54,15 @@ function App() {
 
               {/* Suppliers - Admin & Purchase */}
               <Route path="/suppliers" element={<SupplierList />} />
+              <Route path="/suppliers/new" element={<AddSupplier />} />
+              <Route path="/suppliers/edit/:id" element={<EditSupplier />} />
 
               {/* Sales Orders - Admin & Sales */}
               <Route path="/sales-orders" element={<SalesOrderList />} />
 
               {/* Purchase Orders - Admin & Purchase */}
               <Route path="/purchase-orders" element={<PurchaseOrderList />} />
+              <Route path="/purchase-orders/new" element={<CreatePurchaseOrder />} />
 
               {/* GRN - Admin & Inventory */}
               <Route path="/grn" element={<GRNList />} />
